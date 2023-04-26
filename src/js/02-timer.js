@@ -28,7 +28,14 @@ flatpickr(datetimePickerElem, datetimePickerOptions);
 
 startBtn.addEventListener('click', startTimer);
 
+let timerRunning = false;
+
 function startTimer() {
+  if (timerRunning) {
+    Notiflix.Notify.info('Timer is already running');
+    return;
+  }
+
   const targetDate = new Date(datetimePickerElem.value);
   const timerId = setInterval(() => {
     const timeLeft = convertMs(targetDate - Date.now());
@@ -45,10 +52,13 @@ function startTimer() {
       hoursElem.textContent = '00';
       minutesElem.textContent = '00';
       secondsElem.textContent = '00';
+
+      timerRunning = false;
     }
   }, 1000);
-}
 
+  timerRunning = true;
+}
 function convertMs(ms) {
   // Number of milliseconds per unit of time
   const second = 1000;
@@ -67,7 +77,3 @@ function convertMs(ms) {
 
   return { days, hours, minutes, seconds };
 }
-
-console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
